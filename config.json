@@ -1,3 +1,8 @@
 {
-  "secret_key":"NzY3NjIzNjYyMzIwMzUzMjgw.X40nPg.CCzcMH0rf9-34aadkltAkUCHFCg"
+  "discord": {
+    "secret_key":"NzY3NjIzNjYyMzIwMzUzMjgw.X40nPg.CCzcMH0rf9-34aadkltAkUCHFCg"
+  },
+  "coin_market_cap": {
+    "api_key":"2e6ea54d-8f0b-47ca-96b4-0276ae9c7b6f"
+  }
 }
