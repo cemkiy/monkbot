@@ -7,29 +7,42 @@ const coinMarketCapClient = new CoinMarketCap(config.coin_market_cap.api_key)
 
 console.log('config', config)
 
+let count = 0
+
 discordClient.login(config.discord.secret_key)
 
 discordClient.on('ready', () => {
   // console.log(`Logged in as ${client.user.tag}!`)
   coinMarketCapClient.getTickers().then(resp => {
     resp.data.forEach(cc => {
+      if (count === 1) {
+        return
+      }
+
+      // one more
+      count++
+
       const embed = new MessageEmbed()
         .setColor(0xff9900)
-        .setURL('https://discord.js.org/')
-        .setTitle('1 hour later -> Rise or Fall?')
-        .setDescription('10000 dolar -> ?')
-        .setImage('https://i.pinimg.com/originals/84/53/d6/8453d6f9e8571ba8f1fddd3fc09ab422.jpg')
+        .setURL('https://coinmarketcap.com/currencies/' + cc.slug)
+        .setTitle('1 hour later -> Up or Down?')
+        .setDescription('Make your choise for ' + cc.slug)
+        .setImage('https://s3.coinmarketcap.com/generated/sparklines/web/7d/usd/' + cc.id + '.png')
+        .setThumbnail('https://s2.coinmarketcap.com/static/img/coins/64x64/' + cc.id + '.png')
         .addFields(
-          { name: 'Inline field title', value: 'Some value here', inline: true },
-          { name: 'Inline field title', value: 'Some value here', inline: true }
+          { name: 'price($)', value: cc.quote.USD.price.toFixed(4).toString(), inline: true },
+          { name: '24h', value: cc.quote.USD.percent_change_24h.toFixed(4).toString(), inline: true },
+          { name: '7d', value: cc.quote.USD.percent_change_7d.toFixed(4).toString(), inline: true },
+          { name: 'market cap', value: cc.quote.USD.market_cap.toFixed(4).toString(), inline: true },
+          { name: 'volume', value: cc.quote.USD.volume_24h.toFixed(4).toString(), inline: true },
+          { name: 'circulating supply', value: cc.circulating_supply.toFixed(4).toString(), inline: true }
         )
         .setTimestamp()
-        .setFooter('Some footer text here', 'https://i.imgur.com/wSTFkRM.png')
-      // discordClient.channels.cache.get('765490673058185231').send(embed).then(messageReaction => {
-      //   console.log(messageReaction)
-      //   messageReaction.react('⬆️')
-      //   messageReaction.react('⬇️')
-      // })
+        .setFooter('you can vote using the following emojis')
+      discordClient.channels.cache.get('765490673058185231').send(embed).then(messageReaction => {
+        messageReaction.react('⬆️')
+        messageReaction.react('⬇️')
+      })
     })
   }).catch(console.error)
 })
