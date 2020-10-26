@@ -13,10 +13,11 @@ discordClient.login(config.discord.secret_key)
 
 discordClient.on('ready', () => {
   // console.log(`Logged in as ${client.user.tag}!`)
+  discordClient.channels.cache.get('765490673058185231').send('New period is start. Vote, vote, more vote!')
   coinMarketCapClient.getTickers().then(resp => {
     resp.data.forEach(cc => {
       if (count === 1) {
-        return
+        process.exit(1)
       }
 
       // one more

@@ -1,0 +1,8 @@
+{
+  "name": "monkbot",
+  "description": "monkbot is a crypto currencies community bot program",
+  "repository": "https://github.com/cemkiy/monkbot",
+  "logo": "https://cdn.discordapp.com/icons/765490673058185226/36f7d6eed390ae94a3f07324b26b3d01.png?size=128",
+  "keywords": ["node", "monkbot", "heroku"],
+  "image": "heroku/nodejs"
+}
