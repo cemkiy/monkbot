@@ -18,6 +18,7 @@
   "homepage": "https://github.com/cemkiy/monkbot#readme",
   "dependencies": {
     "coinmarketcap-api": "^3.1.1",
-    "discord.js": "^12.3.1"
+    "discord.js": "^12.4.1",
+    "mongoose": "^5.10.11"
   }
 }
