@@ -1,8 +1,18 @@
 {
-  "discord": {
-    "secret_key":"NzY3NjIzNjYyMzIwMzUzMjgw.X40nPg.CCzcMH0rf9-34aadkltAkUCHFCg"
-  },
-  "coin_market_cap": {
-    "api_key":"2e6ea54d-8f0b-47ca-96b4-0276ae9c7b6f"
+  "hourly_channel": "771060533184692265",
+  "daily_channel": "769268803828711445",
+  "weekly_channel": "769268755992805406",
+  "montly_channel": "769267629734494208",
+  "new_tour_message": ":money_mouth: :money_mouth: :money_mouth:  New period is start. Vote:money_mouth: , vote:money_mouth: , more vote:money_mouth: :moneybag::moneybag::moneybag::moneybag::moneybag::moneybag::moneybag:",
+  "coins": {
+    "bitcoin": {
+      "color": "0xff9900"
+    },
+    "ethereum": {
+      "color": "0x3c3c3d"
+    },
+    "xrp": {
+      "color": "0x006097"
+    }
   }
 }
