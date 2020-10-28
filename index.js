@@ -1,75 +1,104 @@
 const { Client, MessageEmbed } = require('discord.js')
 const CoinMarketCap = require('coinmarketcap-api')
 
+const mongoose = require('mongoose')
+mongoose.connect(process.env.MONGODB, {useNewUrlParser: true, useUnifiedTopology: true});
+
 const config = require('./config.json')
 const discordClient = new Client()
-const coinMarketCapClient = new CoinMarketCap(config.coin_market_cap.api_key)
+const coinMarketCapClient = new CoinMarketCap(process.env.COIN_MARKET_CAP)
+
+const messageGenerator = require('./message-generator')
+const schema = require('./schemas')
 
 console.log('config', config)
 
-let count = 0
-
-discordClient.login(config.discord.secret_key)
+discordClient.login(process.env.DISCORD)
 
 discordClient.on('ready', () => {
-  // console.log(`Logged in as ${client.user.tag}!`)
-  discordClient.channels.cache.get('765490673058185231').send('New period is start. Vote, vote, more vote!')
+    // console.log(`Logged in as ${client.user.tag}!`)
+
+    const now = new Date()
+    let isDaily = false
+    let isWeekly = false
+    let isMontly = false
+ 
   coinMarketCapClient.getTickers().then(resp => {
-    resp.data.forEach(cc => {
-      if (count === 1) {
-        process.exit(1)
+    discordClient.channels.cache.get(config.hourly_channel).send(config.new_tour_message)
+    if (now.getHours() === 0){
+      isDaily = true
+      discordClient.channels.cache.get(config.daily_channel).send(config.new_tour_message)
+      if (now.getDay() === 0){
+        isWeekly = true
+        discordClient.channels.cache.get(config.weekly_channel).send(config.new_tour_message)
       }
 
-      // one more
-      count++
+      if (now.getDate() === 1){
+        isMontly = true
+        discordClient.channels.cache.get(config.montly_channel).send(config.new_tour_message)
+      }
+    }
 
-      const embed = new MessageEmbed()
-        .setColor(0xff9900)
-        .setURL('https://coinmarketcap.com/currencies/' + cc.slug)
-        .setTitle('1 hour later -> Up or Down?')
-        .setDescription('Make your choise for ' + cc.slug)
-        .setImage('https://s3.coinmarketcap.com/generated/sparklines/web/7d/usd/' + cc.id + '.png')
-        .setThumbnail('https://s2.coinmarketcap.com/static/img/coins/64x64/' + cc.id + '.png')
-        .addFields(
-          { name: 'price($)', value: cc.quote.USD.price.toFixed(4).toString(), inline: true },
-          { name: '24h', value: cc.quote.USD.percent_change_24h.toFixed(4).toString(), inline: true },
-          { name: '7d', value: cc.quote.USD.percent_change_7d.toFixed(4).toString(), inline: true },
-          { name: 'market cap', value: cc.quote.USD.market_cap.toFixed(4).toString(), inline: true },
-          { name: 'volume', value: cc.quote.USD.volume_24h.toFixed(4).toString(), inline: true },
-          { name: 'circulating supply', value: cc.circulating_supply.toFixed(4).toString(), inline: true }
-        )
-        .setTimestamp()
-        .setFooter('you can vote using the following emojis')
-      discordClient.channels.cache.get('765490673058185231').send(embed).then(messageReaction => {
-        messageReaction.react('⬆️')
-        messageReaction.react('⬇️')
+    resp.data.forEach(cc => {
+      if (config.coins[cc.slug] === undefined){
+        return
+      }
+
+      // hourly
+      discordClient.channels.cache.get(config.hourly_channel).send(messageGenerator.new(cc)).then(message => {
+        const hourly = new schema.Hourly({
+          message_id: message.id,
+          price: cc.quote.USD.price
+        })
+        hourly.save().catch(console.error)
+
+        message.react('⬆️')
+        message.react('⬇️')
       })
-    })
-  }).catch(console.error)
-})
 
-// {
-//   id: 1,
-//   name: 'Bitcoin',
-//   symbol: 'BTC',
-//   slug: 'bitcoin',
-//   num_market_pairs: 9665,
-//   date_added: '2013-04-28T00:00:00.000Z',
-//   tags: [Array],
-//   max_supply: 21000000,
-//   circulating_supply: 18522862,
-//   total_supply: 18522862,
-//   platform: null,
-//   cmc_rank: 1,
-//   last_updated: '2020-10-21T06:13:23.000Z',
-//   quote: {
-// USD: {
-//   price: 0.23635790461673,
-//   volume_24h: 6108574.14028903,
-//   percent_change_1h: -0.73787822,
-//   percent_change_24h: -2.56395707,
-//   percent_change_7d: -8.20080531,
-//   market_cap: 86881467.2086185,
-//   last_updated: '2020-10-21T06:39:32.000Z'
-// }
-// },
+      // daily
+      if (isDaily){
+        discordClient.channels.cache.get(config.daily_channel).send(messageGenerator.new(cc)).then(message => {
+        const daily = new schema.Daily({
+          message_id: message.id,
+          price: cc.quote.USD.price
+        })
+        daily.save().catch(console.error)
+
+        message.react('⬆️')
+        message.react('⬇️')
+      })
+      }
+
+      // weekly
+      if (isWeekly){
+        discordClient.channels.cache.get(config.weekly_channel).send(messageGenerator.new(cc)).then(message => {
+        const weekly = new schema.Weekly({
+          message_id: message.id,
+          price: cc.quote.USD.price
+        })
+        weekly.save().catch(console.error)
+
+        message.react('⬆️')
+        message.react('⬇️')
+      })
+      }
+
+      // montly
+      if (isMontly){
+        discordClient.channels.cache.get(config.montly_channel).send(messageGenerator.new(cc)).then(message => {
+        const montly = new schema.Montly({
+          message_id: message.id,
+          price: cc.quote.USD.price
+        })
+        montly.save().catch(console.error)
+
+        message.react('⬆️')
+        message.react('⬇️')
+      })
+      }
+    })
+  }).catch(console.error).then(() => {
+    setTimeout(function(){ process.exit(1) }, 5000)
+  })
+})
