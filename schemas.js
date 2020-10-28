@@ -14,7 +14,7 @@ const Prediction = mongoose.Schema({
   }
 })
 
-const Hourly = module.exports = mongoose.model('Hourly', Prediction)
-const Daily = module.exports = mongoose.model('Daily', Prediction)
-const Weekly = module.exports = mongoose.model('Weekly', Prediction)
-const Montly = module.exports = mongoose.model('Montly', Prediction)
+module.exports.Hourly = mongoose.model('Hourly', Prediction)
+module.exports.Daily = mongoose.model('Daily', Prediction)
+module.exports.Weekly = mongoose.model('Weekly', Prediction)
+module.exports.Montly = mongoose.model('Montly', Prediction)
