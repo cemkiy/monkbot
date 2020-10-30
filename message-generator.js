@@ -7,7 +7,7 @@ module.exports.new = function (cc) {
   const embed = new MessageEmbed()
     .setColor(config.coins[cc.slug].color)
     .setURL('https://coinmarketcap.com/currencies/' + cc.slug)
-    .setTitle('1 hour later -> Up or Down?')
+    .setTitle('What will happen -> Up or Down?')
     .setDescription('Make your choise for ' + cc.slug)
     .setImage('https://s3.coinmarketcap.com/generated/sparklines/web/7d/usd/' + cc.id + '.png')
     .setThumbnail('https://s2.coinmarketcap.com/static/img/coins/64x64/' + cc.id + '.png')
