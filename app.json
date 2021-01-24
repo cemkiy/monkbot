@@ -4,5 +4,19 @@
   "repository": "https://github.com/cemkiy/monkbot",
   "logo": "https://cdn.discordapp.com/icons/765490673058185226/36f7d6eed390ae94a3f07324b26b3d01.png?size=128",
   "keywords": ["node", "monkbot", "heroku"],
-  "image": "heroku/nodejs"
+  "image": "heroku/nodejs",
+  "env": {
+    "COIN_MARKET_CAP": {
+      "description": "Coinmarketcap api key. Look at https://coinmarketcap.com/api/",
+      "value": ""
+    },
+    "DISCORD": {
+      "description": "Discord api key. Look at https://discord.com/developers/applications",
+      "value": ""
+    },
+     "MONGODB": {
+      "description": "Cloud mongodb for save data. Yo can use https://mlab.com/",
+      "value": ""
+    }
+  }
 }
