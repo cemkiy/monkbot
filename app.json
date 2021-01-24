@@ -18,5 +18,11 @@
       "description": "Cloud mongodb for save data. Yo can use https://mlab.com/",
       "value": ""
     }
-  }
+  },
+  "addons": [
+    {
+      "plan": "scheduler:standard",
+      "as": "Scheduler"
+    }
+  ]
 }
