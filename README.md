@@ -6,11 +6,13 @@
 
 # monkbot
 
-Monkbot send market price to your discord server.
+Monkbot send market price to your discord server. If you need like this chatbot, communicate with me.
 
 - Btc
 - Eth
 - xrp
+
+Assets are configurable.
 
 Sending time options:
 
@@ -18,6 +20,8 @@ Sending time options:
 - daily
 - weekly
 - montly
+
+Time options are configurable.
 
 # images
 
